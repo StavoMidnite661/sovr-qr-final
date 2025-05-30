@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "routes": [
+    {
+      "src": "/api/qr-presentment",
+      "methods": ["GET", "POST"],
+      "dest": "/api/qr-presentment.js"
+    }
+  ]
+}
