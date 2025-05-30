@@ -1,0 +1,10 @@
+{
+  "name": "sovr-qr-final",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "ethers": "^6.7.0",
+    "axios": "^1.6.0",
+    "uuid": "^9.0.0"
+  }
+}
