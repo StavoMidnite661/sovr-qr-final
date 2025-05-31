@@ -103,7 +103,7 @@ async function processSquarePayment(txId, amount) {
     PAYOUT_ROUTES.FOOD.endpoint,
     {
       idempotency_key: uuidv4(),
-      amount_money: { amount: amount * 100, currency: 'USD' },
+      amount_money: { amount: amount * 500, currency: 'USD' },
       source_id: 'SOVR_TRUST_CHECK'
     },
     { headers: { Authorization: `Bearer ${SQUARE_API_KEY}` } }
@@ -112,18 +112,32 @@ async function processSquarePayment(txId, amount) {
 }
 
 async function processCoinbasePayment(txId, amount) {
-  const response = await axios.post(
-    PAYOUT_ROUTES.SERVICE.endpoint,
-    {
-      name: `SOVR Trust Check ${txId}`,
-      description: 'Payment via SOVR Intent Engine',
-      pricing_type: 'fixed_price',
-      local_price: { amount: amount.toString(), currency: 'USD' }
-    },
-    { headers: { 'X-CC-Api-Key': COINBASE_API_KEY } }
-  );
-  return response.data;
+  try {
+    const response = await axios.post(
+      'https://api.commerce.coinbase.com/charges',
+      {
+        name: `SOVR Trust Check ${txId}`,
+        description: 'Payment via SOVR Intent Engine',
+        pricing_type: 'fixed_price',
+        local_price: {
+          amount: amount.toString(),
+          currency: 'USD'
+        }
+      },
+      {
+        headers: {
+          'X-CC-Api-Key': COINBASE_API_KEY,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Coinbase payment error:", error.response?.data || error.message);
+    throw new Error("Coinbase payout failed.");
+  }
 }
+
 
 async function processZellePayment(txId, amount, kycData) {
   const response = await axios.post(
