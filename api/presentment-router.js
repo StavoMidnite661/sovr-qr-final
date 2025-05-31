@@ -1,6 +1,6 @@
-const { ethers } = require('ethers');
-const axios = require('axios');
-const { v4: uuidv4 } = require('uuid');
+import { ethers } from 'ethers';
+import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 
 // Environment variables (loaded from Vercel)
 const SQUARE_API_KEY = process.env.SQUARE_API_KEY;
