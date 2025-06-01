@@ -145,22 +145,27 @@ async function processSquarePayment(txId, amount) {
 }
 
 async function processCoinbasePayment(txId, amount) {
-  const response = await axios.post(
-    PAYOUT_ROUTES.SERVICE.endpoint,
-    {
-      name: `SOVR Trust Check ${txId}`,
-      description: 'Payment via SOVR Intent Engine',
-      pricing_type: 'fixed_price',
-      local_price: { amount: amount.toString(), currency: 'USD' }
-    },
-    {
-      headers: {
-        'X-CC-Api-Key': COINBASE_API_KEY,
-        'Content-Type': 'application/json'
+  try {
+    const response = await axios.post(
+      PAYOUT_ROUTES.SERVICE.endpoint,
+      {
+        name: `SOVR Trust Check ${txId}`,
+        description: 'Payment via SOVR Intent Engine',
+        pricing_type: 'fixed_price',
+        local_price: { amount: amount.toString(), currency: 'USD' }
+      },
+      {
+        headers: {
+          'X-CC-Api-Key': COINBASE_API_KEY,
+          'Content-Type': 'application/json'
+        }
       }
-    }
-  );
-  return response.data;
+    );
+    return response.data;
+  } catch (error) {
+    console.error(`Error processing Coinbase payment for txId ${txId}:`, error.message);
+    throw new Error('Failed to process Coinbase payment');
+  }
 }
 
 async function processDwollaPayment(txId, amount, kycData) {
