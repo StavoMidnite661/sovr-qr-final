@@ -1,7 +1,7 @@
 // Coinbase JWT Generator (coinbaseJwt.js)
-const jwt = require('jsonwebtoken');
-const { createPrivateKey } = require('crypto');
-const fetch = require('node-fetch');
+import jwt from 'jsonwebtoken';
+import { createPrivateKey, randomBytes } from 'crypto';
+import fetch from 'node-fetch';
 
 function generateCoinbaseJWT(uri) {
   const privateKey = createPrivateKey(process.env.COINBASE_PRIVATE_KEY);
@@ -18,12 +18,12 @@ function generateCoinbaseJWT(uri) {
     algorithm: 'ES256',
     header: {
       kid: keyName,
-      nonce: require('crypto').randomBytes(16).toString('hex')
+      nonce: randomBytes(16).toString('hex')
     }
   });
 }
 
-async function getCoinbasePaymentMethods() {
+export async function getCoinbasePaymentMethods() {
   const uri = 'GET api.coinbase.com/api/v3/brokerage/payment_methods';
   const jwtToken = generateCoinbaseJWT(uri);
 
@@ -39,7 +39,7 @@ async function getCoinbasePaymentMethods() {
   return data.payment_methods;
 }
 
-async function createCoinbaseWithdrawal(accountId, amount, paymentMethodId) {
+export async function createCoinbaseWithdrawal(accountId, amount, paymentMethodId) {
   const uri = `POST api.coinbase.com/api/v3/brokerage/accounts/${accountId}/withdrawals`;
   const jwtToken = generateCoinbaseJWT(uri);
 
@@ -61,8 +61,4 @@ async function createCoinbaseWithdrawal(accountId, amount, paymentMethodId) {
   return data;
 }
 
-module.exports = {
-  generateCoinbaseJWT,
-  getCoinbasePaymentMethods,
-  createCoinbaseWithdrawal
-};
+export { generateCoinbaseJWT };
