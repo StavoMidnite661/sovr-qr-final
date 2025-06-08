@@ -3,7 +3,7 @@ const axios = require('axios');
 const { v4: uuidv4 } = require('uuid');
 
 // Add xAI API client (hypothetical, adjust based on actual SDK)
-const xaiApiKey = 'xai-vNG8T9jfjYL0oLcvg3bxohn2yAqG3MK2Fy3tYSLParbtnwJOErk1lQRFdu1kHKii2WuNVq74TWn0nzMS';
+const xaiApiKey = 'XAI_API_KEY=your_xai_api_key';
 const xaiClient = axios.create({
   baseURL: 'https://api.x.ai/v1',
   headers: {
